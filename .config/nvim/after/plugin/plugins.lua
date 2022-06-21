@@ -19,6 +19,10 @@ use {'catppuccin/nvim', as = 'catppuccin'}
 
 --Markdown preview
 use 'ellisonleao/glow.nvim'
+use({
+    "iamcco/markdown-preview.nvim",
+    run = function() vim.fn["mkdp#util#install"]() end,
+})
 
 --Language packs
 use 'sheerun/vim-polyglot'

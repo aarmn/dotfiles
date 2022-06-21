@@ -66,7 +66,8 @@ vim.keymap.set("n", "<leader>p", "<cmd>Glow<cr>")
 
 -- Native LSP Setup
 -- Global setup.
-local cmp = require'cmp'
+local ok, cmp = pcall(require, "cmp")
+if not ok then return end
 cmp.setup({
 snippet = {
    expand = function(args)
@@ -244,8 +245,7 @@ require('telescope').setup{
 require('telescope').load_extension('fzf')
 require('telescope').load_extension('file_browser')
 
-local mappings = {
-}
+local mappings = {}
 mappings.curr_buf = function() 
   local opt = require('telescope.themes').get_dropdown({height=10, previewer=false})
   require('telescope.builtin').current_buffer_fuzzy_find(opt)
