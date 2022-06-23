@@ -16,37 +16,9 @@ vim.o.swapfile = false
 vim.o.clipboard = "unnamedplus"
 vim.g.mapleader = " "
 
-local keymap = function(tbl)
-	-- Some sane default options
-	local opts = { noremap = true, silent = true }
-	-- Dont want these named fields on the options table
-	local mode = tbl['mode']
-	tbl['mode'] = nil
-	local bufnr = tbl['bufnr']
-	tbl['bufnr'] = nil
-
-	for k, v in pairs(tbl) do
-		if tonumber(k) == nil then
-			opts[k] = v
-		end
-	end
-
-
-	if bufnr ~= nil then
-		vim.api.nvim_buf_set_keymap(bufnr, mode, tbl[1], tbl[2], opts)
-	else
-		vim.api.nvim_set_keymap(mode, tbl[1], tbl[2], opts)
-	end
-end
-
-local nmap = function(tbl)
-	tbl['mode'] = 'n'
-	keymap(tbl)
-end
-
-local imap = function(tbl)
-	tbl['mode'] = 'i'
-	keymap(tbl)
+P = function(v)
+    print(vim.inspect(v))
+    return v
 end
 
 -- Aesthetic
@@ -58,11 +30,13 @@ vim.cmd[[colorscheme catppuccin]]
 
 -- require'nvim-treesitter.configs'.setup { ensure_installed = "all", highlight = { enable = true } }
 
+-- keymaps
 vim.g.glow_binary_path = vim.env.HOME .. "/bin"
 vim.g.glow_use_pager = true
 vim.g.glow_border = "shadow"
 vim.keymap.set("n", "<leader>p", "<cmd>Glow<cr>")
-
+vim.keymap.set("n", "<leader>ff", "<cmd>Telescope current_buffer_fuzzy_find sorting_strategy=ascending prompt_position=top<CR>")
+vim.keymap.set("n", "<leader>lg", "<cmd>Telescope live_grep<CR>")
 
 -- Native LSP Setup
 -- Global setup.
@@ -110,8 +84,6 @@ lsp_installer.settings({
 })
 
 
-nmap{"C-f", "<cmd>Telescope current_buffer_fuzzy_find sorting_strategy=ascending prompt_position=top<CR>"}
-nmap{"<leader>lg", "<cmd>Telescope live_grep<CR>"}
 
 local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 local on_attach = function(client, bufnr)
