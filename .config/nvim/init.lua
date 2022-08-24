@@ -108,26 +108,23 @@ local on_attach = function(client, bufnr)
 	buf_set_keymap("n", "<leader>D", "<cmd>Telescope lsp_type_definitions<CR>", opts)
 	buf_set_keymap("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
 	buf_set_keymap("n", "<leader>ca", "<cmd>Telescope lsp_code_actions<CR>", opts)
-	buf_set_keymap("n", "gt", "<cmd> lua vim.lsp.buf.type_definition", opts)
-	buf_set_keymap("n", "gi", "<cmd> lua vim.lsp.buf.implementation", opts)
-	buf_set_keymap("n", "<leader>dj", "<cmd> lua vim.diagnostic.goto_next", opts)
-	buf_set_keymap("n", "<leader>dk", "<cmd> lua vim.diagnostic.goto_prev", opts)
-	buf_set_keymap("n", "<leader>dl", "<cmd>Telescope diagnostics<cr>", opts)
-	buf_set_keymap("n", "<leader>r", "<cmd> lua vim.lsp.buf.rename", opts)
-	buf_set_keymap("n", "<leader>ca", "<cmd> lua vim.lsp.buf.code_action", opts)
+	buf_set_keymap("n", "gt", "<cmd> lua vim.lsp.buf.type_definition()<CR>", opts)
+	buf_set_keymap("n", "gi", "<cmd> lua vim.lsp.buf.implementation()<CR>", opts)
+	buf_set_keymap("n", "<leader>dj", "<cmd> lua vim.diagnostic.goto_next()<CR>", opts)
+	buf_set_keymap("n", "<leader>dk", "<cmd> lua vim.diagnostic.goto_prev()<CR>", opts)
+	buf_set_keymap("n", "<leader>dl", "<cmd>Telescope diagnostics<CR>", opts)
+	buf_set_keymap("n", "<leader>r", "<cmd> lua vim.lsp.buf.rename()<CR>", opts)
+	buf_set_keymap("n", "<leader>ca", "<cmd> lua vim.lsp.buf.code_action()<CR>", opts)
 
-	if client.server_capabilities.document_formatting then
 		vim.cmd([[
 			augroup formatting
 				autocmd! * <buffer>
-				autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_seq_sync()
-				autocmd BufWritePre <buffer> lua OrganizeImports(1000)
+				autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()
+				autocmd BufWritePre <buffer> lua OrganizeImports(150)
 			augroup END
 		]])
-	end
 
 	-- Set autocommands conditional on server_capabilities
-	if client.server_capabilities.document_highlight then
 		vim.cmd([[
 			augroup lsp_document_highlight
 				autocmd! * <buffer>
@@ -135,12 +132,11 @@ local on_attach = function(client, bufnr)
 				autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
 			augroup END
 		]])
-	end
 end
 
 lsp_installer.setup{}
 local lspconfig = require('lspconfig')
-lspconfig.gopls.setup {
+lspconfig.gopls.setup{
 	capabilities = capabilities,
 	on_attach = on_attach,
 	settings = {
@@ -152,14 +148,10 @@ lspconfig.gopls.setup {
 		debounce_text_changes = 150,
 	},
 }
-lspconfig.golangci_lint_ls.setup {
+lspconfig.golangci_lint_ls.setup{
 	capabilities = capabilities,
 	on_attach = on_attach,
-	settings = {
-		gopls = {
-			gofumpt = true,
-		},
-	},
+	settings = {},
 	flags = {
 		debounce_text_changes = 150,
 	},
