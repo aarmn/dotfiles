@@ -25,7 +25,7 @@ export PATH="$HOME/.npm/bin:$PATH"
 # Aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-echo "$(cat $HOME/banner)" | lolcat
+sh -c "diff <( printf '%s\n' "$SHLVL" ) <( printf '%s\n' "2" ) && echo "$(cat $HOME/banner)" | lolcat"
 # figlet -f standard "bashbunni" | lolcat
 [ -f "$HOME/.ghcup/env" ] && source "$HOME/.ghcup/env" # ghcup-env
 
